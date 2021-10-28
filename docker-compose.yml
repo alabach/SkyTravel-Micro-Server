@@ -1,0 +1,85 @@
+version: "3.8"
+services:
+  vol-service:
+      build: C:\Users\moham\Desktop\ProjetMS\Vol
+      ports:
+        - "8089:8089"
+      image: "vol-service"
+      depends_on:
+        - euroka-server
+  transport-service:
+      container_name: transport
+      build: C:\Users\moham\Desktop\ProjetMS\transport
+      ports:
+        - "8084:8084"
+      image: "transport-service"
+      depends_on:
+        - euroka-server
+  user-service: 
+      container_name : user
+      restart: always
+      build: C:\Users\moham\Desktop\ProjetMS\Node_user_MS
+      ports:
+       - '5200:5200'
+      image: "user-service"
+      links:
+       - mongo
+       -  euroka-server
+  facture-service:
+      build: C:\Users\moham\Desktop\ProjetMS\facture
+      ports:
+       - "8031:8031"
+      image: "facture-service"
+      depends_on:
+       - euroka-server
+  reclamation-service:
+    build: C:\Users\moham\Desktop\ProjetMS\reclamation
+    ports:
+      - "8088:8088"
+    image: "reclamation-service"
+    restart: unless-stopped
+    depends_on:
+      - euroka-server
+      - mysql-standalone
+  hotel-service:
+    build: C:\Users\moham\Desktop\ProjetMS\hotel
+    ports:
+      - "8081:8081"
+    image: "hotel-service"
+    restart: unless-stopped
+    depends_on:
+      - euroka-server
+      - mysql-standalone
+  mysql-standalone:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=sa
+      - MYSQL_PASSWORD=password
+    ports:
+      - "3306:3306"
+  mongo:
+      container_name: mongo
+      image: mongo
+      ports:
+       - '27017:27017'
+  euroka-server:
+      build: C:\Users\moham\Desktop\ProjetMS\euroka-server
+      ports:
+       - "8761:8761"
+      image: "euroka"
+  zuul:
+      build: C:\Users\moham\Desktop\ProjetMS\Zuul-Gateway
+      ports:
+       - "8763:8763"
+      image: "zuul"
+      depends_on:
+       - euroka-server
+  config:
+      build: C:\Users\moham\Desktop\ProjetMS\config
+      ports:
+       - "8005:8005"
+      image: "config"
+      depends_on:
+       - euroka-server

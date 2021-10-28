@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  vol:
+    build: C:\Users\moham\Desktop\ProjetMS\Vol
+    ports:
+      - "8089:8089"
+    image: "vol-service"
+    depends_on:
+      - euroka-server
+  euroka-server:
+    build: C:\Users\moham\Desktop\ProjetMS\euroka-server
+    ports:
+      - "8761:8761"
+    image: "eureka"
